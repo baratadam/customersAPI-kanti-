@@ -52,7 +52,7 @@ app.put("/customers/:id", (req, res) => {
   const index = customers.indexOf(customer);
   customers = { ...customer, name, email };
   customers[index] = customer;
-  res.status(200).json(customers[index]);
+  res.status(200).json(customer);
 });
 
 //DELETE
@@ -66,3 +66,27 @@ app.delete("/customers/:id", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server runs on http://localhost:${PORT}`);
 });
+
+//PATCH
+
+app.patch("/customers/:id", (req, res) => {
+    const id = req.params.id;
+    const customer = customers.find((customer) => customer.id == id);
+    if (!customer) {
+        return res.status(404).json({ message: "Customer not found" });
+    }
+    const { name, email } = req.body;
+    if (!name || !email) {
+        return res.status(400).json({ message: "Name or email is required" });
+    }
+    const index = customers.indexOf(customer);
+    customers = {
+    id: customer.id,
+    name: name || customer.name,
+    email: email || customer.email,
+    };
+    customers[index] = customer;
+    res.status(200).json(customers[index]);
+    }
+);
+
